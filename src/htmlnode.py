@@ -1,3 +1,4 @@
+
 class HTMLNode:
     def __init__(self, tag=None, value=None, children=None, props=None):
         self.tag = tag
@@ -11,9 +12,8 @@ class HTMLNode:
     def props_to_html(self):
         if self.props is None:
             return ""
-        props_list = list(map(lambda prop: f' {prop}="{self.props[prop]}"', self.props))
-        html_prop = "".join(props_list)
-        return html_prop
+        props_list = list(map(lambda prop: f' {prop}="{self.props[prop]}"', self.props)) # type: ignore
+        return "".join(props_list)
     
     def __repr__(self):
         return f"tag - {self.tag}\nvalue - {self.value}\nchildren - {self.children}\nprops - {self.props}"
@@ -28,7 +28,7 @@ class LeafNode(HTMLNode):
 
     def to_html(self):
         if self.value is None:
-            raise ValueError
+            raise ValueError("The object has no value")
         if self.tag is None:
             return f"{self.value}"
         
@@ -36,3 +36,25 @@ class LeafNode(HTMLNode):
             return f"<{self.tag}>{self.value}</{self.tag}>"
         return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
     
+class ParentNode(HTMLNode):
+    def __init__(self, tag, children, props=None):
+        super().__init__(tag, children, props)
+        self.tag = tag
+        self.children = children
+        self.props = props
+
+    def to_html(self):
+        if self.tag is None:
+            raise ValueError("The object has no tag")
+        
+        if self.children is None:
+            raise ValueError("The object has no children")
+
+        result = ""
+        for child in self.children:
+            result += child.to_html()
+        return f"<{self.tag}>{result}</{self.tag}>"
+    
+
+
+        

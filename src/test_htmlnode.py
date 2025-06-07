@@ -1,5 +1,5 @@
 from unittest import TestCase
-from htmlnode import HTMLNode, LeafNode
+from htmlnode import HTMLNode, LeafNode, ParentNode
 
 test_prop = {
     "href": "https://www.google.com",
@@ -74,3 +74,31 @@ class TestHtmlNode(TestCase):
     def test_no_tag(self):
         node = LeafNode(None, "Just a text")
         self.assertEqual(node.to_html(), "Just a text")
+
+    def test_to_html_with_children(self):
+        child_node = LeafNode("span", "child")
+        parent_node = ParentNode("div", [child_node])
+        self.assertEqual(parent_node.to_html(), "<div><span>child</span></div>")
+
+    def test_to_html_with_grandchildren(self):
+        grandchild_node = LeafNode("b", "grandchild")
+        child_node = ParentNode("span", [grandchild_node])
+        parent_node = ParentNode("div", [child_node])
+        self.assertEqual(
+            parent_node.to_html(),
+            "<div><span><b>grandchild</b></span></div>"
+        )
+
+
+    def test_to_html_with_multiplechildren(self):
+        child_node = [
+            LeafNode("b", "Bold text"),
+            LeafNode(None, "Normal text"),
+            LeafNode("i", "italic text"),
+            LeafNode(None, "Normal text")]
+        parent_node = ParentNode("p", child_node)
+        self.assertEqual(
+            parent_node.to_html(),
+            "<p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>"
+        )
+
