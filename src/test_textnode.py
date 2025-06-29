@@ -5,13 +5,13 @@ from textnode import TextNode, TextType, text_node_to_html_node
 
 class TestTextNode(unittest.TestCase):
     def test_eq(self):
-        node = TextNode("This is a text node", TextType.BOLD_TEXT)
-        node2 = TextNode("This is a text node", TextType.BOLD_TEXT)
+        node = TextNode("This is a text node", TextType.BOLD)
+        node2 = TextNode("This is a text node", TextType.BOLD)
         self.assertEqual(node, node2)
 
     def test_not_eq(self):
-        node = TextNode("This is a text node", TextType.ITALIC_TEXT)
-        node2 = TextNode("This is not a text node", TextType.ITALIC_TEXT)
+        node = TextNode("This is a text node", TextType.ITALIC)
+        node2 = TextNode("This is not a text node", TextType.ITALIC)
         self.assertNotEqual(node, node2)
 
     def test_diff_texttype(self):
@@ -25,7 +25,7 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(node, node2)
 
     def test_repr(self):
-        node = TextNode("This is a text node", TextType.NORMAL_TEXT, "https://www.boot.dev")
+        node = TextNode("This is a text node", TextType.TEXT, "https://www.boot.dev")
         self.assertEqual(
             "TextNode(This is a text node, plain_text, https://www.boot.dev)", repr(node)
         )
@@ -33,7 +33,7 @@ class TestTextNode(unittest.TestCase):
 
 class TestTextNodetoHtmlNode(unittest.TestCase):
     def test_text(self):
-        node = TextNode("This is a text node", TextType.NORMAL_TEXT)
+        node = TextNode("This is a text node", TextType.TEXT)
         html_node = text_node_to_html_node(node)
         self.assertEqual(html_node.tag, None)
         self.assertEqual(html_node.value, "This is a text node")
@@ -49,7 +49,7 @@ class TestTextNodetoHtmlNode(unittest.TestCase):
         )
     
     def test_italics(self):
-        node = TextNode("A normal text", TextType.ITALIC_TEXT)
+        node = TextNode("A normal text", TextType.ITALIC)
         html_node = text_node_to_html_node(node)
         self.assertEqual(html_node.tag, "i")
         self.assertEqual(html_node.value, "A normal text")
